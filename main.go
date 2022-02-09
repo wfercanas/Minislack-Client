@@ -8,14 +8,14 @@ import (
 	"strings"
 )
 
-func read(connection net.Conn, inbound *bufio.Reader) {
+func read(inbound *bufio.Reader) {
 	for {
-		message, err := inbound.ReadString('\n')
+		message, err := inbound.ReadBytes('\n')
 		if err != nil {
 			fmt.Print("->> ERR: Connection lost with server\n")
 			return
 		}
-		fmt.Print(message)
+		fmt.Print(string(message))
 	}
 }
 
@@ -28,11 +28,11 @@ func main() {
 
 	outbound := bufio.NewReader(os.Stdin)
 	inbound := bufio.NewReader(connection)
-	go read(connection, inbound)
+	go read(inbound)
 
 	for {
-		text, _ := outbound.ReadString('\n')
-		fmt.Fprintf(connection, text+"\n")
+		text, _ := outbound.ReadBytes('\n')
+		connection.Write(text)
 
 		if strings.TrimSpace(string(text)) == "STOP" {
 			fmt.Println("TCP client exiting...")
