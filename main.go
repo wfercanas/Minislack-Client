@@ -30,7 +30,8 @@ func main() {
 	go read(inbound)
 
 	for {
-		text, _ := outbound.ReadBytes('\n')
+		msg, _ := outbound.ReadBytes('\n')
+		text := handle(msg)
 		connection.Write(text)
 	}
 }
