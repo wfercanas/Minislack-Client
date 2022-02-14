@@ -31,7 +31,12 @@ func main() {
 
 	for {
 		msg, _ := outbound.ReadBytes('\n')
-		text := handle(msg)
-		connection.Write(text)
+
+		text, err := handle(msg)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			connection.Write(text)
+		}
 	}
 }
