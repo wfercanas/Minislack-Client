@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"strings"
 )
 
 func read(inbound *bufio.Reader) {
@@ -33,11 +32,5 @@ func main() {
 	for {
 		text, _ := outbound.ReadBytes('\n')
 		connection.Write(text)
-
-		if strings.TrimSpace(string(text)) == "STOP" {
-			fmt.Println("TCP client exiting...")
-			connection.Close()
-			return
-		}
 	}
 }
