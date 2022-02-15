@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 var BREAK_LINE_DELIMITER = []byte("//")
@@ -21,15 +22,39 @@ func saveFile(message []byte) {
 	splittedBody := bytes.Split(body, []byte("//"))
 	formattedBody := bytes.Join(splittedBody, []byte("\n"))
 
-	file, err := os.Create("./downloads/" + string(filename))
+	path := "./downloads/" + string(filename)
+	ext := bytes.Split(filename, []byte("."))[1]
+	name := bytes.TrimRight(bytes.TrimSuffix(filename, ext), ".")
+
+	if !availablePath(path) {
+		newName := string(name)
+		var newPath string
+		for i := 1; ; i++ {
+			newName += "(" + strconv.Itoa(i) + ")."
+			newPath = "./downloads/" + string(newName) + string(ext)
+			if availablePath(newPath) {
+				path = newPath
+				break
+			}
+			newName = string(name)
+		}
+	}
+
+	file, err := os.Create(path)
 	if err != nil {
-		panic(err)
+		fmt.Printf("Error saving %s: %e\n", string(filename), err)
 	}
 	defer file.Close()
 
 	n, err := file.Write(formattedBody)
 	if err != nil {
-		panic(err)
+		fmt.Printf("Error saving %s: %e\n", string(filename), err)
 	}
 	fmt.Printf("Filename %s saved in ./downloads folder (%d bytes)\n\n", string(filename), n)
+
+}
+
+func availablePath(path string) bool {
+	_, err := os.Stat(path)
+	return err != nil
 }
