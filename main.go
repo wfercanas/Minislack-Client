@@ -11,7 +11,7 @@ func read(inbound *bufio.Reader) {
 	for {
 		message, err := inbound.ReadBytes('\n')
 		if err != nil {
-			fmt.Print("->> ERR: Connection lost with server\n")
+			fmt.Print("->> ERR: Connection lost with server\nUse CTRL+C to quit\n")
 			return
 		}
 
