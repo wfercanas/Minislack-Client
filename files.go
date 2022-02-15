@@ -49,9 +49,9 @@ func saveFile(message []byte) {
 	n, err := file.Write(formattedBody)
 	if err != nil {
 		fmt.Printf("Error saving %s: %e\n", string(filename), err)
+	} else {
+		fmt.Printf("Filename %s saved in ./downloads folder (%d bytes)\n\n", string(filename), n)
 	}
-	fmt.Printf("Filename %s saved in ./downloads folder (%d bytes)\n\n", string(filename), n)
-
 }
 
 func availablePath(path string) bool {
