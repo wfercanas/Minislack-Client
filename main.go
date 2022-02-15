@@ -14,7 +14,12 @@ func read(inbound *bufio.Reader) {
 			fmt.Print("->> ERR: Connection lost with server\n")
 			return
 		}
-		fmt.Print(string(message))
+
+		if isFile(message) {
+			saveFile(message)
+		} else {
+			fmt.Print(string(message))
+		}
 	}
 }
 
