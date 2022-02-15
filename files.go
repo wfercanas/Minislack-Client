@@ -42,15 +42,15 @@ func saveFile(message []byte) {
 
 	file, err := os.Create(path)
 	if err != nil {
-		fmt.Printf("Error saving %s: %e\n", string(filename), err)
+		fmt.Printf("->> ERR: saving %s: %e\n", string(filename), err)
 	}
 	defer file.Close()
 
 	n, err := file.Write(formattedBody)
 	if err != nil {
-		fmt.Printf("Error saving %s: %e\n", string(filename), err)
+		fmt.Printf("->> ERR: saving %s: %e\n", string(filename), err)
 	} else {
-		fmt.Printf("Filename %s saved in ./downloads folder (%d bytes)\n\n", string(filename), n)
+		fmt.Printf("->> Filename %s saved in ./downloads folder (%d bytes)\n\n", string(filename), n)
 	}
 }
 
