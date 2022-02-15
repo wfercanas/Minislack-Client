@@ -14,7 +14,12 @@ func read(inbound *bufio.Reader) {
 			fmt.Print("->> ERR: Connection lost with server\n")
 			return
 		}
-		fmt.Print(string(message))
+
+		if isFile(message) {
+			saveFile(message)
+		} else {
+			fmt.Print(string(message))
+		}
 	}
 }
 
@@ -30,7 +35,13 @@ func main() {
 	go read(inbound)
 
 	for {
-		text, _ := outbound.ReadBytes('\n')
-		connection.Write(text)
+		msg, _ := outbound.ReadBytes('\n')
+
+		text, err := handle(msg)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			connection.Write(text)
+		}
 	}
 }
