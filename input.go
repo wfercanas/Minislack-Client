@@ -45,7 +45,7 @@ func send(args []byte) ([]byte, error) {
 	}
 
 	buffer := make([]byte, 8)
-	body := []byte(fmt.Sprintf(string(filename) + "\n"))
+	var body []byte
 
 	file, err := os.Open(filepath)
 	if err != nil {
@@ -63,12 +63,21 @@ func send(args []byte) ([]byte, error) {
 		body = append(body, buffer[:n]...)
 	}
 
+	formattedBody := replaceReturns(body)
+
 	command := []byte("SEND ")
 	command = append(command, recipient...)
 	command = append(command, []byte(" ")...)
 	command = append(command, filename...)
-	command = append(command, []byte(" ")...)
-	command = append(command, body...)
+	command = append(command, []byte(" >> ")...)
+	command = append(command, formattedBody...)
 
 	return command, nil
+}
+
+func replaceReturns(body []byte) []byte {
+	splittedBody := bytes.Split(body, []byte("\n"))
+	joinedBody := bytes.Join(splittedBody, []byte("//"))
+	joinedBody = append(joinedBody, '\n')
+	return joinedBody
 }
